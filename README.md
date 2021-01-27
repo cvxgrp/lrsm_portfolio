@@ -25,6 +25,7 @@ In addition, if you refer to Laplacian-regularized stratified models, please cit
     journal      = {arXiv preprint arXiv:1904.12017},
     year         = {2019},
 }
+```
 
 ## License
 
