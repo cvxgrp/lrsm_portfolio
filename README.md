@@ -14,6 +14,8 @@ If you use `lrsm_portfolio`, please cite the following paper:
     journal      = {arXiv preprint arXiv:2101.04113},
     year         = {2021},
 }
+```
+
 In addition, if you refer to Laplacian-regularized stratified models, please cite the following paper:
 
 ```
