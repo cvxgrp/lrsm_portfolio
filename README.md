@@ -31,10 +31,10 @@ cite the following [paper](https://stanford.edu/~boyd/papers/strat_models.html),
 }
 
 @article{eigen_strat_models,
-	author = {Tuck, J. and Boyd, S.,
-	title = {Eigen-stratified models},
-	journal = {Optimization and Engineering},
-	year = {2021},
+	author       = {Jonathan Tuck and Stephen Boyd},
+	title        = {Eigen-stratified models},
+	journal      = {Optimization and Engineering},
+	year         = {2021}
 }
 
 @article{cov_strat_models,
