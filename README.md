@@ -29,6 +29,14 @@ cite the following [paper](https://stanford.edu/~boyd/papers/strat_models.html),
     year         = {2021},
     note         = {To appear}
 }
+
+@article{eigen_strat_models,
+	author = {Tuck, J. and Boyd, S.,
+	title = {Eigen-stratified models},
+	journal = {Optimization and Engineering},
+	year = {2021},
+}
+
 @article{cov_strat_models,
     author       = {Jonathan Tuck and Stephen Boyd},
     title        = {Fitting {L}aplacian Regularized Stratified {G}aussian Models},
@@ -36,12 +44,14 @@ cite the following [paper](https://stanford.edu/~boyd/papers/strat_models.html),
     year         = {2020},
     note         = {Manuscript}
 }
+
 @article{mm_dist_lapl,
     author       = {Jonathan Tuck and David Hallac and Stephen Boyd},
     title        = {Distributed Majorization-Minimization for {L}aplacian Regularized Problems},
     journal      = {IEEE/CAA Journal of Automatica Sinica},
     year         = {2019},
 }
+```
 ## License
 
 This repository carries a permissive Apache 2.0 license.
