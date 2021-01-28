@@ -16,7 +16,7 @@ If you use `lrsm_portfolio`, please cite the following paper:
 }
 ```
 
-In addition, if you refer to Laplacian-regularized stratified models, please cite the following paper:
+In addition, if you refer to Laplacian-regularized stratified models, please cite the following [paper](https://stanford.edu/~boyd/papers/strat_models.html):
 
 ```
 @article{strat_models,
