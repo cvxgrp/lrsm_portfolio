@@ -22,8 +22,6 @@ cite the following [paper](https://stanford.edu/~boyd/papers/strat_models.html),
 ```
 @article{strat_models,
     author       = {Jonathan Tuck and Shane Barratt and Stephen Boyd},
-    title        = {A distributed method for fitting Laplacian regularized stratified models},
-    journal      = {arXiv preprint arXiv:1904.12017},
     title        = {A Distributed Method for Fitting {L}aplacian Regularized Stratified Models},
     journal      = {Journal of Machine Learning Research},
     year         = {2021},
