@@ -29,15 +29,15 @@ def get_data_dict(df_Y, df_Z, num_assets, num_quantiles=10):
     return dict(Y=Ys, Z=Zs, n=num_assets)
 
 def make_G(w1, w2, w3):
-    G_vix = nx.path_graph(10)
-    G_inflation = nx.path_graph(10)
-    G_mort = nx.path_graph(10)
+    G_vix = nx.path_graph(10) #vix quantiles (deciles)
+    G_unemp = nx.path_graph(10) #volume quantiles
+    G_inflation = nx.path_graph(10) #volume quantiles
 
     strat_models.set_edge_weight(G_vix, w1)
-    strat_models.set_edge_weight(G_inflation, w2)
-    strat_models.set_edge_weight(G_mort, w3)
+    strat_models.set_edge_weight(G_unemp, w2)
+    strat_models.set_edge_weight(G_inflation, w3)
 
-    G = strat_models.cartesian_product([G_vix, G_inflation, G_mort])
+    G = strat_models.cartesian_product([G_vix, G_unemp, G_inflation])
     
     return G.copy()
 
@@ -50,6 +50,34 @@ def correlation_from_covariance(covariance):
     correlation = covariance / outer_v
     correlation[covariance == 0] = 0
     return correlation
+
+def find_models_to_use(date, directory):
+    models = os.listdir(directory)
+    models_to_use = []
+    print(date)
+    for model in models:
+        _, d1, d2, _ = model.split("_")
+
+        #d1_d2.pkl uses data up to and including d1. 
+        #so, if date is d2, is safe to use d1_d2.pkl but NOT d2_d3.pkl
+        if pd.to_datetime(date) > pd.to_datetime(d1) and pd.to_datetime(date) <= pd.to_datetime(d2):
+            models_to_use.append(model)
+
+            
+    FINAL_MODELS_TO_USE = []
+
+    for file in models_to_use:
+        if "risk" in file:
+            FINAL_MODELS_TO_USE.append(file)
+            break
+
+    for file in models_to_use:
+        if "return" in file:
+            FINAL_MODELS_TO_USE.append(file)
+            break
+            
+    return FINAL_MODELS_TO_USE
+
 
 def backtest(returns, Z_returns, benchmark, means, covs,
             lev_lim, bottom_sec_limit, upper_sec_limit, shorting_cost, tcost, 
@@ -64,9 +92,15 @@ def backtest(returns, Z_returns, benchmark, means, covs,
     
     benchmark_returns = benchmark.loc[Z_returns.index].copy().values.flatten()
 
+    """
+    On the fly computing for stratified model policy    
+    """
+
     W = [np.zeros(18)]
     W[0][8] = 1 #vti
     for date in range(1,T):
+
+        # if date % 50 == 0: print(date)
 
         dt = Z_returns.iloc[date].name.strftime("%Y-%m-%d")
 
@@ -81,13 +115,13 @@ def backtest(returns, Z_returns, benchmark, means, covs,
 
         w = cp.Variable(num_assets)
 
-        #adding returns and covariances for the day
+        #adding cash asset into returns and covariances
         SIGMA = covs[node]
         MU = means[node]
 
         roll = 15
 
-        #get last 15 days tcs, lagged by one! This doesnt include today's date
+        #get last 5 days tcs, lagged by one! so this doesnt include today's date
         tau = np.maximum( bid_ask.loc[:dt].iloc[-(roll+1):-1].mean().values , 0)/2
 
         obj = - w@(MU + 1) + shorting_cost*(kappa@cp.neg(w)) + tcost*(cp.abs(w-w_prev))@tau
@@ -105,7 +139,7 @@ def backtest(returns, Z_returns, benchmark, means, covs,
         
         returns_date = 1+returns[date, :]     
 
-        #get TODAY's bid ask spread. We use this in computing the transaction costs.
+        #get TODAY's tc
         tau_sim = bid_ask.loc[dt].values.flatten()/2
 
         value_strat *= returns_date@w.value - (kappa@cp.neg(w)).value - (cp.abs(w-w_prev)@tau_sim).value

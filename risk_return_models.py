@@ -5,6 +5,8 @@ import networkx as nx
 import cvxpy as cp
 import torch
 
+torch.manual_seed(0)
+
 def huber_return_prox(Y, nu, theta, t, M):
     if Y is None:
         return nu
@@ -17,7 +19,7 @@ def huber_return_prox(Y, nu, theta, t, M):
     n,nk = Y[0].shape
     theta_tch = torch.from_numpy(theta).requires_grad_(True)
     loss = torch.nn.SmoothL1Loss(beta=M)
-    optim = torch.optim.LBFGS([theta_tch], lr=1, max_iter=50)
+    optim = torch.optim.SGD([theta_tch], lr=.01, momentum=0.9)
 
     def closure():
         optim.zero_grad()
